@@ -1,12 +1,9 @@
 declare module 'jsbeeb/6502' {
-  import type { Model } from 'jsbeeb/models'
   import type { Cmos } from 'jsbeeb/cmos'
   import type { DdNoise, FakeDdNoise } from 'jsbeeb/ddnoise'
   import type { Debugger } from 'jsbeeb/web/debug'
   import type { FakeSoundChip, SoundChip } from 'jsbeeb/soundchip'
   import type { Video } from 'jsbeeb/video'
-  import type { SysVia } from 'jsbeeb/via'
-  import type { Fdc } from 'jsbeeb/fdc'
   import type { Disassemble6502 } from 'jsbeeb/6502.opcodes'
 
   export class Flags {
@@ -45,33 +42,39 @@ declare module 'jsbeeb/6502' {
     x: number
     y: number
     s: number
-
-    video: Video
-    sysvia: SysVia
-    acia: Acia
-
-    fdc: Fdc
+    forceTracing: boolean
 
     econet?: any
+    acia: any
+    scheduler: Scheduler
+    adconverter: any
+    sysvia: any
+    uservia: any
+    fdc: any
+    tube: any
+    video: any
+    soundChip: any
+    music5000: any
+    ddNoise: any
 
     targetCycles: number
     currentCycles: number
     cycleSeconds: number
 
-    debugInstruction: DebugHook
-    debugRead: DebugHook
-    debugWrite: DebugHook
+    debugInstruction: any
+    debugRead: any
+    debugWrite: any
 
-    _debugInstruction: any
-    _debugRead: any
-    _debugWrite: any
+    _debugInstruction: ((pc: number, opcode: number) => boolean) | null
+    _debugRead: ((addr: number, val: number, offset: number) => void) | null
+    _debugWrite: ((addr: number, val: number) => void) | null
 
     ramRomOs: Uint8Array //[4587520] // Not sure benefits to know the size
 
     disassembler: Disassemble6502
 
     constructor(
-      model: Model,
+      model: any,
       dbgr: Debugger,
       video_: Video,
       soundChip_: SoundChip | FakeSoundChip,
